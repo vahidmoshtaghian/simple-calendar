@@ -1,3 +1,7 @@
 <div class="container">
+  <button mat-fab extended (click)="onAddEventClick()" id="addEventButton">
+    <mat-icon>add</mat-icon>
+    Add new event
+  </button>
   <mat-calendar #calendar [(selected)]="selected" (selectedChange)="onDateChange()"></mat-calendar>
 </div>

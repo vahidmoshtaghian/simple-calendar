@@ -1,7 +1,11 @@
-import { Component, model, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, model, OnInit, ViewChild } from '@angular/core';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatCalendar, MatDatepickerModule } from '@angular/material/datepicker';
 import { SelectedDateService } from '../../services/selectedDate.service';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDialog } from '@angular/material/dialog';
+import { AddEventDialogComponent } from '../add-event-dialog/add-event-dialog.component';
 
 @Component({
   standalone: true,
@@ -9,11 +13,12 @@ import { SelectedDateService } from '../../services/selectedDate.service';
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss'],
   providers: [provideNativeDateAdapter()],
-  imports: [MatDatepickerModule]
+  imports: [MatDatepickerModule, MatButtonModule, MatIconModule]
 })
 export class SidebarComponent implements OnInit {
   selected = model<Date>(new Date());
   @ViewChild('calendar') calendar!: MatCalendar<Date>;
+  readonly dialog = inject(MatDialog);
 
   constructor(private selectedDateService: SelectedDateService) { }
 
@@ -28,5 +33,9 @@ export class SidebarComponent implements OnInit {
     this.selected.subscribe((date) => {
       this.selectedDateService.changeDate(date);
     })
+  }
+
+  onAddEventClick() {
+    this.dialog.open(AddEventDialogComponent);
   }
 }
