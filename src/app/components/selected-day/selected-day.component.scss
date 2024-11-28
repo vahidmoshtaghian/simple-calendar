@@ -2,6 +2,7 @@
   overflow: auto;
   max-height: calc(100vh - 65px);
   padding-top: 5px;
+  position: relative;
 }
 
 .hour {
@@ -17,4 +18,12 @@
     font-size: smaller;
     color: var(--mat-sys-secondary-fixed-dim);
   }
+}
+
+.now-pointer {
+  position: absolute;
+  z-index: 10;
+  left: 25px;
+  width: calc(100% - 30px);
+  border: 1px solid var(--mat-sys-error);
 }

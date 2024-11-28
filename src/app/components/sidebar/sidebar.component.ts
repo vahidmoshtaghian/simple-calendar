@@ -19,10 +19,14 @@ export class SidebarComponent implements OnInit {
 
   ngOnInit() {
     this.selectedDateService.currentDate.subscribe((date) => {
-      if (date) {
-        this.selected.set(date);
-        this.calendar.activeDate = date;
-      }
+      this.selected.set(date);
+      this.calendar.activeDate = date;
     });
+  }
+
+  onDateChange() {
+    this.selected.subscribe((date) => {
+      this.selectedDateService.changeDate(date);
+    })
   }
 }

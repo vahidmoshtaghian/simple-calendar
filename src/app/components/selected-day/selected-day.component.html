@@ -1,4 +1,5 @@
 <div class="container">
+    <hr class="now-pointer" [style.top]="currentTime + 'px'" [style.display]="isToday ? 'block' : 'none'" />
     <div *ngFor="let hour of clockHours" class="hour">
         <span>{{ hour }}</span>
     </div>

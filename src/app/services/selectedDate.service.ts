@@ -5,7 +5,7 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class SelectedDateService {
-  private dateSource = new BehaviorSubject<Date | null>(null);
+  private dateSource = new BehaviorSubject<Date>(new Date());
   currentDate = this.dateSource.asObservable();
 
   changeDate(date: Date) {
