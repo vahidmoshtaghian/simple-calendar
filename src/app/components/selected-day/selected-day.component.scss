@@ -1,0 +1,20 @@
+.container {
+  overflow: auto;
+  max-height: calc(100vh - 65px);
+  padding-top: 5px;
+}
+
+.hour {
+  height: 50px;
+  border-top: 1px solid var(--mat-sys-secondary-fixed-dim);
+  margin-left: 50px;
+  position: relative;
+
+  span {
+    position: absolute;
+    top: -10px;
+    left: -45px;
+    font-size: smaller;
+    color: var(--mat-sys-secondary-fixed-dim);
+  }
+}
