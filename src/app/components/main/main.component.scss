@@ -1,0 +1,15 @@
+main {
+  display: flex;
+  > * {
+    margin: 5px;
+  }
+}
+
+.sidebar-container {
+  flex-grow: 1;
+  max-width: 300px;
+}
+
+.selected-day-container {
+  flex-grow: 1;
+}
