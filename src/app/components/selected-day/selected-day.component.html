@@ -1,6 +1,9 @@
 <div class="container">
     <hr class="now-pointer" [style.top]="currentTime + 'px'" [style.display]="isToday ? 'block' : 'none'" />
-    <div *ngFor="let hour of clockHours" class="hour">
-        <span>{{ hour }}</span>
+    <div *ngFor="let clockHour of clockHours" class="hour" [style.height]="blockHeight + 'px'">
+        <span>{{ clockHour.title }}</span>
     </div>
-</div>
+    <div *ngFor="let event of events; index as i" class="event" [style.top]="calculateStartEvent(event) + 'px'"
+        [style.height]="calculateHeightEvent(event) + 'px'" [style.left]="calculateLeftEvent(event, i) + 'px'">
+        <span>{{event.title}}</span>
+    </div>

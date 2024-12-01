@@ -6,7 +6,6 @@
 }
 
 .hour {
-  height: 50px;
   border-top: 1px solid var(--mat-sys-secondary-fixed-dim);
   margin-left: 50px;
   position: relative;
@@ -26,4 +25,19 @@
   left: 25px;
   width: calc(100% - 30px);
   border: 1px solid var(--mat-sys-error);
+}
+
+.event {
+  position: absolute;
+  border-radius: 3px;
+  box-shadow: 1px 1px 10px 0px var(--mat-sys-outline);
+  min-width: 300px;
+  z-index: 11;
+  background-color: var(--mat-sys-on-primary-container);
+
+  span {
+    color: var(--mat-sys-surface-dim);
+    font-size: x-small;
+    padding: 10px;
+  }
 }

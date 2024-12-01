@@ -7,6 +7,13 @@ import { IEventDto } from './models/eventDto';
 export class EventService {
   private readonly storageName = 'events';
 
+  getAll(date: Date): IEventDto[] {
+    var storage = this.getStorage();
+    var filter = new Date(date.toISOString().split('T')[0]);
+
+    return storage;
+  }
+
   add(input: IEventDto) {
     var storage = this.getStorage();
 
@@ -19,7 +26,9 @@ export class EventService {
     else
       input.id = 1;
 
-    storage.push(input);
+    const entity = this.map(input);
+
+    storage.push(entity);
     localStorage.setItem(this.storageName, JSON.stringify(storage));
   }
 
@@ -39,5 +48,21 @@ export class EventService {
     localStorage.setItem(this.storageName, '[]');
 
     return [];
+  }
+
+  private map(input: any): IEventDto {
+    return {
+      id: input.id,
+      date: new Date(input.date.toISOString().split('T')[0]),
+      title: input.title,
+      startTime: {
+        hour: input.startTime.getHours(),
+        minute: input.startTime.getMinutes()
+      },
+      endTime: {
+        hour: input.endTime.getHours(),
+        minute: input.endTime.getMinutes()
+      }
+    }
   }
 }
