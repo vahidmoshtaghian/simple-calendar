@@ -1,15 +1,18 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { SelectedDateService } from '../../services/selectedDate.service';
 import { IEventDto } from '../../services/models/eventDto';
 import { EventService } from '../../services/event.service';
+import { OverlayModule } from '@angular/cdk/overlay';
+import { CdkDragEnd, DragDropModule } from '@angular/cdk/drag-drop';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   standalone: true,
   selector: 'app-selected-day',
   templateUrl: './selected-day.component.html',
   styleUrls: ['./selected-day.component.scss'],
-  imports: [CommonModule]
+  imports: [CommonModule, OverlayModule, DragDropModule, MatIconModule]
 })
 export class SelectedDayComponent implements OnInit {
   readonly offset = 5;
@@ -38,30 +41,31 @@ export class SelectedDayComponent implements OnInit {
 
   calculateCurrentTimePointerPosition() {
     return this.selectedDateService.currentDate.subscribe((date) => {
+      console.log('currentDate.subscribe');
       this.activeDate = date;
 
-      if (date.getDate() === new Date().getDate()) {
+      // For time pointer
+      const nowDate = new Date();
+      if (formatDate(date, 'yyyy-MM-dd', 'en_US') === formatDate(nowDate, 'yyyy-MM-dd', 'en_US')) { // تو این نمیره
         this.isToday = true;
         if (this.activeDate) {
-          const nowDate = new Date();
-          if (nowDate.getDate() !== this.activeDate.getDate())
-            return;
-
           const now = nowDate.getHours() * 60 + nowDate.getMinutes();
           this.currentTime = ((now * 24) / 1440) * 51 - 5;
 
-          this.initialEvents();
         }
       }
       else {
         this.isToday = false;
       }
+
+      this.initialEvents();
     });
   }
 
   initialEvents() {
     if (this.activeDate) {
       this.events = this.eventService.getAll(this.activeDate);
+      console.log(this.events);
     }
   }
 
@@ -78,7 +82,7 @@ export class SelectedDayComponent implements OnInit {
 
   calculateLeftEvent(event: IEventDto, index: number) {
 
-    return 55;
+    return this.offset + this.blockHeight;
   }
 
   calculateHeightEvent(event: IEventDto) {
@@ -87,5 +91,24 @@ export class SelectedDayComponent implements OnInit {
     const minutesHeight = (minutesOffset * this.blockHeight) / 60;
 
     return this.blockHeight * hoursOffset + minutesHeight;
+  }
+
+  dragEnd($event: CdkDragEnd, event: IEventDto) {
+    const navHeight = 45;
+    const realHourDroppedY = $event.dropPoint.y - navHeight;
+    let newHour = realHourDroppedY / this.blockHeight;
+    if (realHourDroppedY % this.blockHeight !== 0)
+      newHour++;
+    const eventOffset = 0; // اول باید فاصله بین استارت و پایان معلوم شه
+    event.startTime.hour = newHour;
+    event.endTime.hour = newHour + eventOffset;
+    this.eventService.update(event);
+
+
+    console.log($event.dropPoint);
+  }
+
+  onDeleteClick(event: IEventDto) {
+    this.eventService.delete(event.id);
   }
 }

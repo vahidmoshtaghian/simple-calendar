@@ -27,9 +27,7 @@ export class SidebarComponent implements OnInit {
       this.selected.set(date);
       this.calendar.activeDate = date;
     });
-  }
 
-  onDateChange() {
     this.selected.subscribe((date) => {
       this.selectedDateService.changeDate(date);
     })

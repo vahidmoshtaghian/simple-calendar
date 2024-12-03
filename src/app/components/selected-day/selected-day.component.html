@@ -4,6 +4,9 @@
         <span>{{ clockHour.title }}</span>
     </div>
     <div *ngFor="let event of events; index as i" class="event" [style.top]="calculateStartEvent(event) + 'px'"
-        [style.height]="calculateHeightEvent(event) + 'px'" [style.left]="calculateLeftEvent(event, i) + 'px'">
+        [style.height]="calculateHeightEvent(event) + 'px'" [style.left]="calculateLeftEvent(event, i) + 'px'"
+        cdkDragBoundary=".container" cdkDrag (cdkDragEnded)="dragEnd($event, event)">
         <span>{{event.title}}</span>
+        <a (click)="onDeleteClick(event)"><mat-icon class="delete-icon">delete</mat-icon></a>
     </div>
+</div>

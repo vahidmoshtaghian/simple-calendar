@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { IEventDto } from './models/eventDto';
+import { formatDate } from '@angular/common';
+import { SelectedDateService } from './selectedDate.service';
 
 @Injectable({
   providedIn: 'root'
@@ -7,11 +9,12 @@ import { IEventDto } from './models/eventDto';
 export class EventService {
   private readonly storageName = 'events';
 
+  constructor(private selectedDateService: SelectedDateService) { }
+
   getAll(date: Date): IEventDto[] {
     var storage = this.getStorage();
-    var filter = new Date(date.toISOString().split('T')[0]);
 
-    return storage;
+    return storage.filter(p => formatDate(p.date, 'yyyy-MM-dd', 'en_US') === formatDate(date, 'yyyy-MM-dd', 'en_US'));
   }
 
   add(input: IEventDto) {
@@ -30,6 +33,7 @@ export class EventService {
 
     storage.push(entity);
     localStorage.setItem(this.storageName, JSON.stringify(storage));
+    this.selectedDateService.changeDate(entity.date);
   }
 
   update(input: IEventDto) {
@@ -38,7 +42,12 @@ export class EventService {
   }
 
   delete(id: number) {
-    alert('deleted');
+    const storage = this.getStorage();
+    const deletedDate = storage.find(p => p.id === id)?.date;
+    const result = storage.filter(p => p.id !== id);
+    localStorage.setItem(this.storageName, JSON.stringify(result));
+
+    this.selectedDateService.changeDate(deletedDate ?? new Date());
   }
 
   private getStorage(): IEventDto[] {
@@ -53,7 +62,7 @@ export class EventService {
   private map(input: any): IEventDto {
     return {
       id: input.id,
-      date: new Date(input.date.toISOString().split('T')[0]),
+      date: input.date,
       title: input.title,
       startTime: {
         hour: input.startTime.getHours(),
