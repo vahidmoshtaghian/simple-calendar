@@ -97,18 +97,24 @@ export class SelectedDayComponent implements OnInit {
   }
 
   dragEnd($event: CdkDragEnd, event: IEventDto) {
-    const navHeight = 45;
-    const realHourDroppedY = $event.dropPoint.y - navHeight;
-    let newHour = realHourDroppedY / this.blockHeight;
-    if (realHourDroppedY % this.blockHeight !== 0)
-      newHour++;
-    const eventOffset = 0; // اول باید فاصله بین استارت و پایان معلوم شه
-    event.startTime.hour = newHour;
-    event.endTime.hour = newHour + eventOffset;
+    const nav = 65;
+
+    const dropY = $event.dropPoint.y - this.offset - nav;
+
+    const newStartHour = Math.floor(dropY / this.blockHeight);
+    const newStartMinute = Math.round(((dropY % this.blockHeight) / this.blockHeight) * 60);
+
+    const eventDurationMinutes = (event.endTime.hour * 60 + event.endTime.minute)
+      - (event.startTime.hour * 60 + event.startTime.minute);
+
+    event.startTime.hour = newStartHour;
+    event.startTime.minute = newStartMinute;
+
+    const newEndTimeMinutes = newStartHour * 60 + newStartMinute + eventDurationMinutes;
+    event.endTime.hour = Math.floor(newEndTimeMinutes / 60);
+    event.endTime.minute = newEndTimeMinutes % 60;
+
     this.eventService.update(event);
-
-
-    console.log($event.dropPoint);
   }
 
   onDeleteClick(event: IEventDto) {

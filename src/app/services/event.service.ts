@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
-import { IEventDto } from './models/eventDto';
-import { formatDate } from '@angular/common';
-import { SelectedDateService } from './selectedDate.service';
+import {Injectable} from '@angular/core';
+import {IEventDto} from './models/eventDto';
+import {formatDate} from '@angular/common';
+import {SelectedDateService} from './selectedDate.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +9,8 @@ import { SelectedDateService } from './selectedDate.service';
 export class EventService {
   private readonly storageName = 'events';
 
-  constructor(private selectedDateService: SelectedDateService) { }
+  constructor(private selectedDateService: SelectedDateService) {
+  }
 
   getAll(date: Date): IEventDto[] {
     var storage = this.getStorage();
@@ -25,8 +26,7 @@ export class EventService {
       console.log(maxId);
 
       input.id = maxId + 1;
-    }
-    else
+    } else
       input.id = 1;
 
     const entity = this.map(input);
@@ -37,8 +37,15 @@ export class EventService {
   }
 
   update(input: IEventDto) {
-    alert('updated');
+    const storage = this.getStorage();
+    const entity = storage.find(p => p.id === input.id);
+    if (entity) {
+      entity.startTime = input.startTime;
+      entity.endTime = input.endTime;
 
+      alert(JSON.stringify(storage));
+      localStorage.setItem(this.storageName, JSON.stringify(storage));
+    }
   }
 
   delete(id: number) {
