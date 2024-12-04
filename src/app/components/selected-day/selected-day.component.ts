@@ -1,11 +1,11 @@
-import { CommonModule, formatDate } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { SelectedDateService } from '../../services/selectedDate.service';
-import { IEventDto } from '../../services/models/eventDto';
-import { EventService } from '../../services/event.service';
-import { OverlayModule } from '@angular/cdk/overlay';
-import { CdkDragEnd, DragDropModule } from '@angular/cdk/drag-drop';
-import { MatIconModule } from '@angular/material/icon';
+import {CommonModule, formatDate} from '@angular/common';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {SelectedDateService} from '../../services/selectedDate.service';
+import {IEventDto} from '../../services/models/eventDto';
+import {EventService} from '../../services/event.service';
+import {OverlayModule} from '@angular/cdk/overlay';
+import {CdkDragEnd, DragDropModule} from '@angular/cdk/drag-drop';
+import {MatIconModule} from '@angular/material/icon';
 
 @Component({
   standalone: true,
@@ -23,7 +23,11 @@ export class SelectedDayComponent implements OnInit {
   clockHours: { hour: number, title: string }[] = [];
   events: IEventDto[] = [];
 
-  constructor(private selectedDateService: SelectedDateService, private eventService: EventService) { }
+  constructor(
+    private selectedDateService: SelectedDateService,
+    private eventService: EventService,
+    private changeDetector: ChangeDetectorRef) {
+  }
 
   ngOnInit() {
     this.fillClocks();
@@ -31,16 +35,16 @@ export class SelectedDayComponent implements OnInit {
   }
 
   fillClocks() {
-    this.clockHours = Array.from({ length: 24 }, (_, i) => {
+    this.clockHours = Array.from({length: 24}, (_, i) => {
       const hour = i === 0 || i === 12 ? 12 : i % 12;
       const period = i < 12 ? 'AM' : 'PM';
 
-      return { hour: i, title: `${hour} ${period}` };
+      return {hour: i, title: `${hour} ${period}`};
     });
   }
 
   calculateCurrentTimePointerPosition() {
-    return this.selectedDateService.currentDate.subscribe((date) => {
+    this.selectedDateService.currentDate.subscribe((date) => {
       console.log('currentDate.subscribe');
       this.activeDate = date;
 
@@ -53,8 +57,7 @@ export class SelectedDayComponent implements OnInit {
           this.currentTime = ((now * 24) / 1440) * 51 - 5;
 
         }
-      }
-      else {
+      } else {
         this.isToday = false;
       }
 
@@ -65,7 +68,7 @@ export class SelectedDayComponent implements OnInit {
   initialEvents() {
     if (this.activeDate) {
       this.events = this.eventService.getAll(this.activeDate);
-      console.log(this.events);
+      this.changeDetector.detectChanges();
     }
   }
 
