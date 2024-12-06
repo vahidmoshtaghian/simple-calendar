@@ -1,6 +1,4 @@
 .container {
-  overflow: auto;
-  max-height: calc(100vh - 65px);
   padding-top: 5px;
   position: relative;
 }
@@ -30,15 +28,24 @@
 .event {
   position: absolute;
   border-radius: 3px;
-  box-shadow: 1px 1px 10px 0px var(--mat-sys-outline);
+  box-shadow: 1px 1px 10px 0 var(--mat-sys-outline);
   min-width: 300px;
   z-index: 11;
   background-color: var(--mat-sys-on-primary-container);
 
-  span {
+  span, b{
     color: var(--mat-sys-surface-dim);
     font-size: x-small;
+  }
+
+  .title {
     padding: 10px;
+  }
+
+  .time{
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
   }
 }
 

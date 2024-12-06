@@ -6,6 +6,7 @@ import {EventService} from '../../services/event.service';
 import {OverlayModule} from '@angular/cdk/overlay';
 import {CdkDragEnd, DragDropModule} from '@angular/cdk/drag-drop';
 import {MatIconModule} from '@angular/material/icon';
+import {log} from '@angular-devkit/build-angular/src/builders/ssr-dev-server';
 
 @Component({
   standalone: true,
@@ -96,25 +97,33 @@ export class SelectedDayComponent implements OnInit {
     return this.blockHeight * hoursOffset + minutesHeight;
   }
 
-  dragEnd($event: CdkDragEnd, event: IEventDto) {
-    const nav = 65;
+  dragEnd(event: CdkDragEnd, eventDto: IEventDto) {
+    const element = event.source.element.nativeElement;
+    const container = element.offsetParent!;
 
-    const dropY = $event.dropPoint.y - this.offset - nav;
+    const elementRect = element.getBoundingClientRect();
+    const containerRect = container.getBoundingClientRect();
 
-    const newStartHour = Math.floor(dropY / this.blockHeight);
-    const newStartMinute = Math.round(((dropY % this.blockHeight) / this.blockHeight) * 60);
+    let newTop = elementRect.top - containerRect.top - this.offset;
+    if(newTop < 0)
+      newTop = 0;
 
-    const eventDurationMinutes = (event.endTime.hour * 60 + event.endTime.minute)
-      - (event.startTime.hour * 60 + event.startTime.minute);
+    const newStartHour = Math.floor(newTop / this.blockHeight);
+    const newStartMinute = Math.round(((newTop % this.blockHeight) / this.blockHeight) * 60);
 
-    event.startTime.hour = newStartHour;
-    event.startTime.minute = newStartMinute;
+    const eventDurationMinutes = (eventDto.endTime.hour * 60 + eventDto.endTime.minute)
+      - (eventDto.startTime.hour * 60 + eventDto.startTime.minute);
+
+    eventDto.startTime.hour = newStartHour;
+    eventDto.startTime.minute = newStartMinute;
 
     const newEndTimeMinutes = newStartHour * 60 + newStartMinute + eventDurationMinutes;
-    event.endTime.hour = Math.floor(newEndTimeMinutes / 60);
-    event.endTime.minute = newEndTimeMinutes % 60;
+    eventDto.endTime.hour = Math.floor(newEndTimeMinutes / 60);
+    eventDto.endTime.minute = newEndTimeMinutes % 60;
 
-    this.eventService.update(event);
+    this.eventService.update(eventDto);
+
+    this.initialEvents();
   }
 
   onDeleteClick(event: IEventDto) {

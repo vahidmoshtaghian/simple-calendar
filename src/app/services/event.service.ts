@@ -43,7 +43,6 @@ export class EventService {
       entity.startTime = input.startTime;
       entity.endTime = input.endTime;
 
-      alert(JSON.stringify(storage));
       localStorage.setItem(this.storageName, JSON.stringify(storage));
     }
   }
