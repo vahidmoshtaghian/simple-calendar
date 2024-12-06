@@ -1,5 +1,4 @@
-
 export interface TimeDto {
-    hour: number;
-    minute: number;
+  hour: number;
+  minute: number;
 }

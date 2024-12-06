@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { NavComponent } from "../nav/nav.component";
-import { SidebarComponent } from "../sidebar/sidebar.component";
-import { SelectedDayComponent } from "../selected-day/selected-day.component";
+import {Component, OnInit} from '@angular/core';
+import {NavComponent} from "../nav/nav.component";
+import {SidebarComponent} from "../sidebar/sidebar.component";
+import {SelectedDayComponent} from "../selected-day/selected-day.component";
 
 @Component({
   standalone: true,
@@ -12,7 +12,8 @@ import { SelectedDayComponent } from "../selected-day/selected-day.component";
 })
 export class MainComponent implements OnInit {
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit() {
   }

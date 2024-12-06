@@ -29,11 +29,10 @@
   position: absolute;
   border-radius: 3px;
   box-shadow: 1px 1px 10px 0 var(--mat-sys-outline);
-  min-width: 300px;
   z-index: 11;
   background-color: var(--mat-sys-on-primary-container);
 
-  span, b{
+  span, b {
     color: var(--mat-sys-surface-dim);
     font-size: x-small;
   }
@@ -42,7 +41,7 @@
     padding: 10px;
   }
 
-  .time{
+  .time {
     position: absolute;
     left: 10px;
     bottom: 10px;

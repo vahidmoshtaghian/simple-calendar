@@ -13,13 +13,15 @@ export class EventService {
   }
 
   getAll(date: Date): IEventDto[] {
-    var storage = this.getStorage();
+    const storage = this.getStorage();
 
-    return storage.filter(p => formatDate(p.date, 'yyyy-MM-dd', 'en_US') === formatDate(date, 'yyyy-MM-dd', 'en_US'));
+    return storage
+      .filter(p => formatDate(p.date, 'yyyy-MM-dd', 'en_US') === formatDate(date, 'yyyy-MM-dd', 'en_US'))
+      .sort((a, b) => (a.startTime.hour * 60 + a.startTime.minute) - (b.startTime.hour * 60 + b.startTime.minute));
   }
 
   add(input: IEventDto) {
-    var storage = this.getStorage();
+    const storage = this.getStorage();
 
     if (storage.length > 0) {
       const maxId = Math.max(...storage.map(p => p.id));

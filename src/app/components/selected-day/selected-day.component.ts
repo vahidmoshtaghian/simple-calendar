@@ -6,7 +6,6 @@ import {EventService} from '../../services/event.service';
 import {OverlayModule} from '@angular/cdk/overlay';
 import {CdkDragEnd, DragDropModule} from '@angular/cdk/drag-drop';
 import {MatIconModule} from '@angular/material/icon';
-import {log} from '@angular-devkit/build-angular/src/builders/ssr-dev-server';
 
 @Component({
   standalone: true,
@@ -16,8 +15,11 @@ import {log} from '@angular-devkit/build-angular/src/builders/ssr-dev-server';
   imports: [CommonModule, OverlayModule, DragDropModule, MatIconModule]
 })
 export class SelectedDayComponent implements OnInit {
-  readonly offset = 5;
-  readonly blockHeight = 50;
+  readonly uiStyle = {
+    containerOffset: 5,
+    blockHeight: 50,
+    eventWidth: 300
+  };
   currentTime = 0;
   isToday = false;
   activeDate: Date | undefined;
@@ -73,28 +75,45 @@ export class SelectedDayComponent implements OnInit {
     }
   }
 
-  getEventsOfHour(hour: number) {
-    return this.events.filter(p => p.startTime.hour === hour);
-  }
-
   calculateStartEvent(event: IEventDto) {
     const borderHeights = event.startTime.hour + 1;
-    const minutesHeight = (this.blockHeight * event.startTime.minute) / 60;
+    const minutesHeight = (this.uiStyle.blockHeight * event.startTime.minute) / 60;
 
-    return this.blockHeight * event.startTime.hour + minutesHeight + borderHeights + this.offset;
+    return this.uiStyle.blockHeight * event.startTime.hour + minutesHeight + borderHeights + this.uiStyle.containerOffset;
   }
 
   calculateLeftEvent(event: IEventDto, index: number) {
+    const eventsOffset = 5;
+    const currentEvent = {
+      start: event.startTime.hour * 60 + event.startTime.minute,
+      end: event.endTime.hour * 60 + event.endTime.minute
+    }
+    let overlapCount = 0;
+    for (let i = 0; i <= index; i++) {
+      const item = {
+        start: this.events[i].startTime.hour * 60 + event.startTime.minute,
+        end: this.events[i].endTime.hour * 60 + event.startTime.minute
+      };
 
-    return this.offset + this.blockHeight;
+      if (this.events[i].id !== event.id &&
+        (currentEvent.start <= item.start && item.start <= currentEvent.end ||
+          currentEvent.start <= item.end && item.end <= currentEvent.end ||
+          currentEvent.start <= item.start && item.end <= currentEvent.end ||
+          item.start <= currentEvent.start && currentEvent.end <= item.end))
+        overlapCount++;
+    }
+
+    return this.uiStyle.containerOffset +
+      this.uiStyle.blockHeight +
+      (this.uiStyle.eventWidth + eventsOffset) * overlapCount;
   }
 
   calculateHeightEvent(event: IEventDto) {
     const hoursOffset = event.endTime.hour - event.startTime.hour;
     const minutesOffset = event.endTime.minute - event.startTime.minute
-    const minutesHeight = (minutesOffset * this.blockHeight) / 60;
+    const minutesHeight = (minutesOffset * this.uiStyle.blockHeight) / 60;
 
-    return this.blockHeight * hoursOffset + minutesHeight;
+    return this.uiStyle.blockHeight * hoursOffset + minutesHeight;
   }
 
   dragEnd(event: CdkDragEnd, eventDto: IEventDto) {
@@ -104,12 +123,12 @@ export class SelectedDayComponent implements OnInit {
     const elementRect = element.getBoundingClientRect();
     const containerRect = container.getBoundingClientRect();
 
-    let newTop = elementRect.top - containerRect.top - this.offset;
-    if(newTop < 0)
+    let newTop = elementRect.top - containerRect.top - this.uiStyle.containerOffset;
+    if (newTop < 0)
       newTop = 0;
 
-    const newStartHour = Math.floor(newTop / this.blockHeight);
-    const newStartMinute = Math.round(((newTop % this.blockHeight) / this.blockHeight) * 60);
+    const newStartHour = Math.floor(newTop / this.uiStyle.blockHeight);
+    const newStartMinute = Math.round(((newTop % this.uiStyle.blockHeight) / this.uiStyle.blockHeight) * 60);
 
     const eventDurationMinutes = (eventDto.endTime.hour * 60 + eventDto.endTime.minute)
       - (eventDto.startTime.hour * 60 + eventDto.startTime.minute);

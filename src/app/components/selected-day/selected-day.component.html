@@ -1,13 +1,19 @@
 <div class="container">
   <hr class="now-pointer" [style.top]="currentTime + 'px'" [style.display]="isToday ? 'block' : 'none'"/>
-  <div *ngFor="let clockHour of clockHours" class="hour" [style.height]="blockHeight + 'px'">
+  <div *ngFor="let clockHour of clockHours" class="hour" [style.height]="uiStyle.blockHeight + 'px'">
     <span>{{ clockHour.title }}</span>
   </div>
-  <div *ngFor="let event of events; index as i" class="event" [style.top]="calculateStartEvent(event) + 'px'"
-       [style.height]="calculateHeightEvent(event) + 'px'" [style.left]="calculateLeftEvent(event, i) + 'px'"
-       cdkDragBoundary=".container" cdkDrag cdkDragLockAxis="y"  (cdkDragEnded)="dragEnd($event, event)">
-    <span class="title">{{ event.title }}</span>
-    <div class="time">
+  <div *ngFor="let event of events; index as i" class="event"
+       [style.top]="calculateStartEvent(event) + 'px'"
+       [style.height]="calculateHeightEvent(event) + 'px'"
+       [style.left]="calculateLeftEvent(event, i) + 'px'"
+       [style.width]="uiStyle.eventWidth + 'px'"
+       cdkDrag
+       cdkDragBoundary=".container"
+       cdkDragLockAxis="y"
+       (cdkDragEnded)="dragEnd($event, event)">
+    <b class="title">{{ event.title }}</b>
+    <div class="time" *ngIf="event.endTime.hour - event.startTime.hour > 1">
       <b>{{ event.startTime.hour | number: '2.0' }}:{{ event.startTime.minute | number: '2.0' }}</b>
       <span> to </span>
       <b>{{ event.endTime.hour | number: '2.0' }}:{{ event.endTime.minute | number: '2.0' }}</b>

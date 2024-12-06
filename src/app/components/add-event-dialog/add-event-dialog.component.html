@@ -1,5 +1,5 @@
 <form [formGroup]="form" (ngSubmit)="onSaveClick()">
-  <h2 mat-dialog-title>{{title}}</h2>
+  <h2 mat-dialog-title>{{ title }}</h2>
   <mat-dialog-content>
     <mat-grid-list cols="2" rowHeight="80px" class="container">
       <mat-grid-tile [colspan]="2">
@@ -20,16 +20,16 @@
         <mat-form-field class="item">
           <mat-label>Start time</mat-label>
           <input matInput [matTimepicker]="startTime" formControlName="startTime">
-          <mat-timepicker-toggle matIconSuffix [for]="startTime" />
-          <mat-timepicker #startTime />
+          <mat-timepicker-toggle matIconSuffix [for]="startTime"/>
+          <mat-timepicker #startTime/>
         </mat-form-field>
       </mat-grid-tile>
       <mat-grid-tile [colspan]="1">
         <mat-form-field class="item">
           <mat-label>End time</mat-label>
           <input matInput [matTimepicker]="endTime" formControlName="endTime">
-          <mat-timepicker-toggle matIconSuffix [for]="endTime" />
-          <mat-timepicker #endTime />
+          <mat-timepicker-toggle matIconSuffix [for]="endTime"/>
+          <mat-timepicker #endTime/>
         </mat-form-field>
       </mat-grid-tile>
     </mat-grid-list>

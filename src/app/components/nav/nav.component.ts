@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { SelectedDateService } from '../../services/selectedDate.service';
+import {Component, OnInit} from '@angular/core';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
+import {SelectedDateService} from '../../services/selectedDate.service';
 
 @Component({
   standalone: true,
@@ -12,7 +12,8 @@ import { SelectedDateService } from '../../services/selectedDate.service';
 })
 export class NavComponent implements OnInit {
 
-  constructor(private selectedDateService: SelectedDateService) { }
+  constructor(private selectedDateService: SelectedDateService) {
+  }
 
   ngOnInit() {
   }
