@@ -1,7 +1,13 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {provideNativeDateAdapter} from '@angular/material/core';
-import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from '@angular/material/dialog';
+import {
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogRef,
+  MatDialogTitle
+} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatTimepickerModule} from '@angular/material/timepicker';
@@ -36,7 +42,7 @@ export class AddEventDialogComponent implements OnInit {
   title = "Add new event";
   form: FormGroup;
 
-  constructor(formBuilder: FormBuilder, private eventService: EventService) {
+  constructor(formBuilder: FormBuilder, private eventService: EventService, private dialogRef: MatDialogRef<AddEventDialogComponent>) {
     this.form = formBuilder.group({
       date: [new Date(), Validators.required],
       title: [''],
@@ -50,5 +56,6 @@ export class AddEventDialogComponent implements OnInit {
 
   onSaveClick() {
     this.eventService.add(this.form.value);
+    this.dialogRef.close();
   }
 }
